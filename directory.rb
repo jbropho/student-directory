@@ -1,19 +1,25 @@
+require 'date'
+
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
-  # create an empty array
+
   students = []
-  # get the first name
+
+  month = get_month()
+
+  puts "Please enter a student name"
+  puts "Hit enter twice to quit"
   name = gets.chomp
-  # while the name is not empty, repeat this code
+  
   while !name.empty? do
-    # add the student hash to the array
-    students << {name: name, cohort: :november}
+    month = get_month() if change_month?
+  
+    students << {name: name, cohort: month}
+
     puts "Now we have #{students.count} students"
-    # get another name from the user
+
     name = gets.chomp
   end
-  # return the array of students
+
   students
 end
 
@@ -21,6 +27,22 @@ def print_header
   puts "The students of Villains Academy".center(50)
   puts "-" * 50
 end
+
+def change_month? 
+  puts "Change cohort month? 'y/n' (Enter to skip)"
+  gets.chomp.downcase.include?('y')
+end 
+
+def get_month
+    puts "Please enter cohort month"
+    month = gets.chomp
+    while !Date::MONTHNAMES.include?(month.capitalize)
+      puts "Please enter a valid value:"
+      puts Date::MONTHNAMES
+      month = gets.chomp
+    end
+    month.capitalize.to_sym
+end 
 
 def print(students, condition = -> (student) { true } )
   students.each_with_index do |student, index|
