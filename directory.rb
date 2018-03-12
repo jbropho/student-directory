@@ -18,24 +18,30 @@ def input_students
 end
 
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+  puts "The students of Villains Academy".center(50)
+  puts "-" * 50
 end
 
-def print(students, letter = "")
+def print(students, condition = true)
   students.each_with_index do |student, index|
-    if student[:name].start_with?(letter)
+    if condition.call(student)
       puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
+      .center(50)
     end 
   end
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{students.count} great students".center(50)
 end
 
 students = input_students
-#nothing happens until we call the methods
 print_header
+
+# example conditions
+length = -> (student) { student[:name].size > 12 }
+character = -> (student) { student[:name].start_with?('a') }
+# pass condition as second argument to print
 print(students)
+puts "-" * 50
 print_footer(students)
