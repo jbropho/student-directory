@@ -22,7 +22,7 @@ def print_header
   puts "-" * 50
 end
 
-def print(students, condition = true)
+def print(students, condition = -> (student) { true } )
   students.each_with_index do |student, index|
     if condition.call(student)
       puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
