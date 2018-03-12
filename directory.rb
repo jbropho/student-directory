@@ -22,9 +22,11 @@ def print_header
   puts "-------------"
 end
 
-def print(students)
+def print(students, letter = "")
   students.each_with_index do |student, index|
-    puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
+    if student[:name].start_with?(letter)
+      puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
+    end 
   end
 end
 
