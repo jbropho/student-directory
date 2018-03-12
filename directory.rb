@@ -11,12 +11,9 @@ def input_students
   name = gets.chomp
   
   while !name.empty? do
+    puts "Now we have #{students.count + 1 } students"
     month = get_month() if change_month?
-  
     students << {name: name, cohort: month}
-
-    puts "Now we have #{students.count} students"
-
     name = gets.chomp
   end
 
