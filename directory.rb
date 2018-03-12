@@ -1,7 +1,6 @@
 require 'date'
 
 def input_students
-
   students = []
   month = get_month
   puts "Please enter a student name"
@@ -11,7 +10,7 @@ def input_students
   while !name.empty? do
     puts "Now we have #{students.count + 1} students"
     month = get_month if change_month?
-    students << {name: name, cohort: month}
+    students << { name: name, cohort: month }
     name = gets.chomp
   end
   students
@@ -38,6 +37,7 @@ def get_month
     month.capitalize.to_sym
 end 
 
+# prints all students, accepts an optional block to filter results
 def print(students, condition = -> (student) { true } )
   students.each_with_index do |student, index|
     if condition.call(student)
@@ -54,7 +54,7 @@ def print_month(sorted_by_month)
     puts "Cohort: #{key}".center(50)
     puts "-" * 50 
 
-    value.each_with_index do |student, index|
+    value.each do |student|
         puts " #{count} : #{student[:name]} ".center(50)
         count += 1
     end 
