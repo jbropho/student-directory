@@ -122,11 +122,10 @@ def sort_by_month
 end 
 
 def save_students(filename = "students.csv")
-  file = File.open( filename, "w") do |f|
+  CSV.open(filename, "w") do |f|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      f.puts csv_line
+      f << student_data
     end
   end 
   flash_message "Successfully saved students to #{filename}"
@@ -140,7 +139,7 @@ def try_load_students
     puts "Loaded #{@students.count} from #{filename}"
   else 
     flash_message "Sorry, #{filename} doesn't exist."
-    exit
+    exit 
   end
 end
 
@@ -166,5 +165,5 @@ character = -> (student) { student[:name].start_with?('a') }
 
 # sorted = sort_by_month(students)
 # print_month(sorted)
-#try_load_students
+try_load_students
 interactive_menu
