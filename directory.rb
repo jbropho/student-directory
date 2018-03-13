@@ -1,5 +1,5 @@
 require 'date'
-
+require 'csv'
 @students = []
 
 def input_students
@@ -24,7 +24,7 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
+  puts "3. Save the list to a .csv"
   puts "4. Load students from a .csv file"
   puts "9. Exit"
 end
@@ -64,20 +64,26 @@ def get_name
   name = STDIN.gets.chomp 
 end 
 
+def get_file_name
+  flash_message "Please enter a file name"
+  file = STDIN.gets.chomp
+end 
+
+
+def get_month
+  puts "Please enter cohort month"
+  month = STDIN.gets.chomp
+  while !Date::MONTHNAMES.include?(month.capitalize)
+    puts "Please enter a valid value:"
+    puts Date::MONTHNAMES
+    month = STDIN.gets.chomp
+  end
+  month.capitalize.to_sym
+end 
+
 def change_month? 
   puts "Change cohort month for next student? 'Y/N' (Enter to skip)"
   STDIN.gets.chomp.downcase.include?('y')
-end 
-
-def get_month
-    puts "Please enter cohort month"
-    month = STDIN.gets.chomp
-    while !Date::MONTHNAMES.include?(month.capitalize)
-      puts "Please enter a valid value:"
-      puts Date::MONTHNAMES
-      month = STDIN.gets.chomp
-    end
-    month.capitalize.to_sym
 end 
 
 # prints all students, accepts an optional lambda to filter results
@@ -139,17 +145,12 @@ def try_load_students
 end
 
 def load_students(filename = "students.csv")
-  File.open(filename, "r").readlines.each do |line|
-    name, cohort = line.chomp.split(',')
+  CSV.foreach(filename) do |line|
+    name, cohort = line[0], line[1]
     @students << {name: name, cohort: cohort.to_sym}
   end
   flash_message "Successfully loaded students from #{filename}"
 end
-
-def get_file_name
-  flash_message "Please enter a file name"
-  file = STDIN.gets.chomp
-end 
 
 def flash_message(message)
   puts "*" * 50
@@ -165,5 +166,5 @@ character = -> (student) { student[:name].start_with?('a') }
 
 # sorted = sort_by_month(students)
 # print_month(sorted)
-try_load_students
+#try_load_students
 interactive_menu
