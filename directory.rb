@@ -95,9 +95,7 @@ end
 def print_by_month(sorted_by_month)
   sorted_by_month.each do |key, value|
     count = 1 
-    puts "-" * 50
-    puts "Cohort: #{key}".center(50)
-    puts "-" * 50 
+    flash_message "Cohort: #{key}".center(50)
 
     value.each do |student|
         puts " #{count} : #{student[:name]} ".center(50)
@@ -115,6 +113,10 @@ def sort_by_month
   by_month
 end 
 
+def line_break
+  "-" * 50 
+end 
+
 def save_students
   file = File.open("students.csv", "w")
   
@@ -124,6 +126,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  flash_message "Successfully saved students to students.csv"
 end
 
 def try_load_students
@@ -145,7 +148,14 @@ def load_students(filename = "students.csv")
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
+  flash_message  "Successfully loaded students from #{filename}"
 end
+
+def flash_message(message)
+  puts line_break
+  puts message
+  puts line_break
+end 
 
 # example conditions
 length = -> (student) { student[:name].size > 12 }
