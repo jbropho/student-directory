@@ -44,7 +44,8 @@ def process(selection)
   when "3"
     save_students
   when "4"
-    load_students
+    file = get_file_name
+    load_students(file)
   when "9"
     exit
   else
@@ -113,10 +114,6 @@ def sort_by_month
   by_month
 end 
 
-def line_break
-  "-" * 50 
-end 
-
 def save_students
   file = File.open("students.csv", "w")
   
@@ -136,7 +133,7 @@ def try_load_students
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else 
-    puts "Sorry, #{filename} doesn't exist."
+    flash_message "Sorry, #{filename} doesn't exist."
     exit
   end
 end
@@ -148,13 +145,18 @@ def load_students(filename = "students.csv")
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
-  flash_message  "Successfully loaded students from #{filename}"
+  flash_message "Successfully loaded students from #{filename}"
 end
 
+def get_file_name
+  puts "Please enter file name"
+  file = STDIN.gets.chomp
+end 
+
 def flash_message(message)
-  puts line_break
+  puts "*" * 50
   puts message
-  puts line_break
+  puts "*" * 50
 end 
 
 # example conditions
