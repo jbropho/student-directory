@@ -6,20 +6,20 @@ def input_students
   month = get_month
   puts "Please enter a student name"
   puts "Hit enter twice to quit"
-  name = gets.chomp
+  name = STDIN.gets.chomp
   
   while !name.empty? do
     puts "Now we have #{@students.count + 1} students"
     month = get_month if change_month?
     @students << { name: name, cohort: month }
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 end
 
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -61,16 +61,16 @@ end
 
 def change_month? 
   puts "Change cohort month for next student? 'Y/N' (Enter to skip)"
-  gets.chomp.downcase.include?('y')
+  STDIN.gets.chomp.downcase.include?('y')
 end 
 
 def get_month
     puts "Please enter cohort month"
-    month = gets.chomp
+    month = STDIN.gets.chomp
     while !Date::MONTHNAMES.include?(month.capitalize)
       puts "Please enter a valid value:"
       puts Date::MONTHNAMES
-      month = gets.chomp
+      month = STDIN.gets.chomp
     end
     month.capitalize.to_sym
 end 
@@ -123,8 +123,20 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+     puts "Loaded #{@students.count} from #{filename}"
+  else 
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -140,4 +152,5 @@ character = -> (student) { student[:name].start_with?('a') }
 
 # sorted = sort_by_month(students)
 # print_month(sorted)
+try_load_students
 interactive_menu
