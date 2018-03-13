@@ -4,15 +4,13 @@ require 'date'
 
 def input_students
   month = get_month
-  puts "Please enter a student name"
-  puts "Hit enter twice to quit"
-  name = STDIN.gets.chomp
+  name = get_name
   
   while !name.empty? do
     puts "Now we have #{@students.count + 1} students"
     month = get_month if change_month?
     @students << { name: name, cohort: month }
-    name = STDIN.gets.chomp
+    name = get_name
   end
 end
 
@@ -28,7 +26,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
-  puts "9. Exit" # 9 because we'll be adding more items
+  puts "9. Exit"
 end
 
 def show_students
@@ -48,7 +46,7 @@ def process(selection)
   when "4"
     load_students
   when "9"
-    exit # this will cause the program to terminate
+    exit
   else
     puts "I don't know what you meant, try again"
   end
@@ -58,6 +56,11 @@ def print_header
   puts "The students of Villains Academy".center(50)
   puts "-" * 50
 end
+
+def get_name 
+  puts "Student name:"
+  name = STDIN.gets.chomp 
+end 
 
 def change_month? 
   puts "Change cohort month for next student? 'Y/N' (Enter to skip)"
@@ -89,7 +92,7 @@ def print_footer
   puts "Overall, we have #{@students.count} great students".center(50)
 end
 
-def print_month(sorted_by_month)
+def print_by_month(sorted_by_month)
   sorted_by_month.each do |key, value|
     count = 1 
     puts "-" * 50
@@ -128,7 +131,7 @@ def try_load_students
   return if filename.nil?
   if File.exists?(filename)
     load_students(filename)
-     puts "Loaded #{@students.count} from #{filename}"
+    puts "Loaded #{@students.count} from #{filename}"
   else 
     puts "Sorry, #{filename} doesn't exist."
     exit
@@ -138,7 +141,7 @@ end
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
+    name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
