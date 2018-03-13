@@ -25,7 +25,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "4. Load students from a .csv file"
   puts "9. Exit"
 end
 
@@ -42,7 +42,8 @@ def process(selection)
   when "2"
     show_students
   when "3"
-    save_students
+    file = get_file_name
+    save_students(file)
   when "4"
     file = get_file_name
     load_students(file)
@@ -114,16 +115,15 @@ def sort_by_month
   by_month
 end 
 
-def save_students
-  file = File.open("students.csv", "w")
-  
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
-  flash_message "Successfully saved students to students.csv"
+def save_students(filename = "students.csv")
+  file = File.open( filename, "w") do |f|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      f.puts csv_line
+    end
+  end 
+  flash_message "Successfully saved students to #{filename}"
 end
 
 def try_load_students
@@ -139,17 +139,15 @@ def try_load_students
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
+  File.open(filename, "r").readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
   end
-  file.close
   flash_message "Successfully loaded students from #{filename}"
 end
 
 def get_file_name
-  puts "Please enter file name"
+  flash_message "Please enter a file name"
   file = STDIN.gets.chomp
 end 
 
