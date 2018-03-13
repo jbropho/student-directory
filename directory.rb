@@ -26,6 +26,7 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -41,6 +42,8 @@ def process(selection)
     input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
     exit # this will cause the program to terminate
   else
@@ -69,14 +72,18 @@ def get_month
     month.capitalize.to_sym
 end 
 
-# prints all students, accepts an optional block to filter results
-def print_student_list(condition = -> (student) { true } )
+# prints all students, accepts an optional lambda to filter results
+def print_student_list(condition = -> (student) { true })
   @students.each_with_index do |student, index|
     if condition.call(student)
       puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
       .center(50)
     end 
   end
+end
+
+def print_footer
+  puts "Overall, we have #{@students.count} great students".center(50)
 end
 
 def print_month(sorted_by_month)
@@ -102,10 +109,16 @@ def sort_by_month
   by_month
 end 
 
-def print_footer
-  puts "Overall, we have #{@students.count} great students".center(50)
+def save_students
+  file = File.open("students.csv", "w")
+  
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
-
 
 # example conditions
 length = -> (student) { student[:name].size > 12 }
