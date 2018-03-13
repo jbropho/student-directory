@@ -26,6 +26,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to a .csv"
   puts "4. Load students from a .csv file"
+  puts "5. View my source code"
   puts "9. Exit"
 end
 
@@ -47,6 +48,8 @@ def process(selection)
   when "4"
     file = get_file_name
     load_students(file)
+  when "5"
+    view_source_code
   when "9"
     exit
   else
@@ -157,6 +160,10 @@ def flash_message(message)
   puts "*" * 50
 end 
 
+def view_source_code
+  puts `cat "#{$0}"`
+end 
+
 # example conditions
 length = -> (student) { student[:name].size > 12 }
 character = -> (student) { student[:name].start_with?('a') }
@@ -165,5 +172,7 @@ character = -> (student) { student[:name].start_with?('a') }
 
 # sorted = sort_by_month(students)
 # print_month(sorted)
+
 try_load_students
 interactive_menu
+
