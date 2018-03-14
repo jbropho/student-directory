@@ -72,7 +72,6 @@ def get_file_name
   file = STDIN.gets.chomp
 end 
 
-
 def get_month
   puts "Please enter cohort month"
   month = STDIN.gets.chomp
