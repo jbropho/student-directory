@@ -2,22 +2,12 @@ require 'directory'
 require 'csv'
 require 'yaml'
 
-describe "Print students" do
-  before :all do
-      students = [
-        { name: "Dr. Hannibal Lecter", cohort: :november},
-        { name: "Darth Vader", cohort: :january},
-        { name: "Alex DeLarge",cohort:  :march},
-        { name: "The Wicked Witch of the West",cohort:  :november},
-      ]
-      File.open "students.yml", "w" do |f|
-          f.write YAML::dump students
-      end
-  end
+def load_students
+  @students =  YAML::load(File.read("students.yml"))
+end 
 
-  before :each do
-    @students =  YAML::load(File.read("students.yml"))
-  end
+describe "Print students" do
+  before :each { load_students }
 
   it 'prints all students' do 
     expect(print_student_list).to eq(
@@ -36,11 +26,15 @@ describe "Print students" do
        {:name=>"The Wicked Witch of the West", :cohort=>:november}]  
     )
   end 
+end 
 
-  it 'filters when supplied with lambda' do 
+describe 'filter_by_student' do 
+  before :each { load_students }
+
+  it 'filters by lambda' do 
     filter = -> (student) { student[:name].start_with?('A') }
     expect(filter_by_student(filter)).to eq(
       [{:name=>"Alex DeLarge", :cohort=>:march}]
       )
-  end 
-end 
+  end   
+end
