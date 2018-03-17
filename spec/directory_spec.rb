@@ -36,4 +36,11 @@ describe "Print students" do
        {:name=>"The Wicked Witch of the West", :cohort=>:november}]  
     )
   end 
+
+  it 'filters when supplied with lambda' do 
+    filter = -> (student) { student[:name].start_with?('A') }
+    expect(filter_by_student(filter)).to eq(
+      [{:name=>"Alex DeLarge", :cohort=>:march}]
+      )
+  end 
 end 

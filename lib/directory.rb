@@ -87,15 +87,16 @@ def change_month?
   STDIN.gets.chomp.downcase.include?('y')
 end 
 
-# prints all students, accepts an optional lambda to filter results
-def print_student_list(condition = -> (student) { true })
+def print_student_list(students = @students)
   @students.each_with_index do |student, index|
-    if condition.call(student)
-      puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
-      .center(50)
-    end 
+    puts " #{index + 1} : #{student[:name]} (#{student[:cohort]} cohort)"
+    .center(50)
   end
 end
+
+def filter_by_student(condition)
+  @students.map { |s| s if condition.call(s) }.delete_if(&:nil?)
+end 
 
 def print_footer
   puts "Overall, we have #{@students.count} great students".center(50)
@@ -164,11 +165,9 @@ end
 
 # example conditions
 length = -> (student) { student[:name].size > 12 }
-character = -> (student) { student[:name].start_with?('a') }
+character = -> (student) { student[:name].start_with?('A') }
 # pass condition as second argument to print
 # print(students)
 
 # sorted = sort_by_month(students)
 # print_month(sorted)
-
-
