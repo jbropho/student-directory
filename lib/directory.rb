@@ -1,7 +1,6 @@
 require 'date'
 require 'csv'
-@students = []
-
+ 
 def input_students
   month = get_month
   name = get_name
@@ -108,7 +107,7 @@ def print_by_month(sorted_by_month)
     flash_message "Cohort: #{key}".center(50)
 
     value.each do |student|
-        puts " #{count} : #{student[:name]} ".center(50)
+      puts " #{count} : #{student[:name]} ".center(50)
         count += 1
     end 
   end
@@ -172,6 +171,4 @@ character = -> (student) { student[:name].start_with?('a') }
 # sorted = sort_by_month(students)
 # print_month(sorted)
 
-try_load_students
-interactive_menu
 
